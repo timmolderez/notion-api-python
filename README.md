@@ -27,7 +27,7 @@ pprint(response)
 ```
 
 Output:
-```json
+```
 {'created_time': '2021-07-01T23:01:00.000Z',
  'id': '0ae112de-3468-4acc-b62c-ff2748402c5c',
  'last_edited_time': '2021-07-03T23:19:00.000Z',
