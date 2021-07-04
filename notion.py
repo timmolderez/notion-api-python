@@ -16,10 +16,14 @@ class NotionClient:
             access_token: your secret Internal Integration Token
                 (https://www.notion.so/my-integrations)
                 If this argument is not provided, the environment variable
-                NOTION_ACCESS_TOKEN is used instead.
+                NOTION_TOKEN is used instead.
         """
         self.access_token = (access_token if access_token
-                             else getenv('NOTION_ACCESS_TOKEN'))
+                             else getenv('NOTION_TOKEN'))
+        if not self.access_token:
+            raise Exception("No Notion access token provided!\n"
+                            "Either set the NOTION_TOKEN environment "
+                            "variable or use the access_token argument.")
 
     def get_database(self, database_id: str) -> Dict:
         """https://developers.notion.com/reference/get-database"""
@@ -61,8 +65,13 @@ class NotionClient:
     def search(self, query: str,
                sort: Dict = {}, filter: Dict = {}) -> Generator[Dict, None, None]:
         """https://developers.notion.com/reference/post-search"""
+        data = {'query': query}
+        if sort:
+            data['sort'] = sort
+        if filter:
+            data['filter'] = filter
         return self._paginated_request(
-            'search', data={'query': query, 'sort': sort,'filter': filter})
+            'search', data=data)
 
     def get_user(self, user_id: str) -> Dict:
         """https://developers.notion.com/reference/get-user"""
