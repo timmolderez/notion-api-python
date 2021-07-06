@@ -1,6 +1,6 @@
 import json
 from os import getenv
-from typing import Optional, Dict, List, Generator
+from typing import Optional, Dict, List, Generator, IO
 from urllib.request import Request, urlopen
 
 NOTION_API_URL = 'https://api.notion.com/v1/'
@@ -46,6 +46,13 @@ class NotionClient:
         return self._request('pages', data={'parent': parent,
                                             'properties': properties,
                                             'children': children})
+
+    def create_markdown_page(self, parent: Dict,
+                             properties: Dict, md_body: IO):
+        pass
+
+    def append_markdown_block_children(self, block_id: str, md_body: IO):
+        pass
 
     def update_page_properties(self, page_id: str, properties: Dict) -> Dict:
         return self._request(f'pages/{page_id}',

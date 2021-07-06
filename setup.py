@@ -2,9 +2,17 @@ from setuptools import find_packages, setup
 
 
 def get_description():
-    with open("README.md") as file:
+    with open('README.md') as file:
         return file.read()
 
+
+def get_requirements():
+    with open('requirements.txt') as fp:
+        reqs = list()
+        for lib in fp.read().split("\n"):
+            if not lib.startswith("-") or lib.startswith("#"):
+                reqs.append(lib.strip())
+        return reqs
 
 setup(
     name="notion-api-python",
@@ -16,6 +24,7 @@ setup(
     long_description=get_description(),
     long_description_content_type="text/markdown",
     packages=find_packages(),
+    install_requires=get_requirements(),
     python_requires=">=3.7, <4",
     classifiers=[
         "Programming Language :: Python :: 3.7",
