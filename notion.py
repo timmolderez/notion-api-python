@@ -92,6 +92,7 @@ class NotionClient:
             into a file-like object)
         """
         children = mistletoe.markdown(md_body, NotionBlockRenderer)
+        pprint(children)
         return self.append_block_children(block_id, children)
 
     def search(self, query: str,
