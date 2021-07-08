@@ -1,7 +1,12 @@
 import json
 from os import getenv
+from pprint import pprint
 from typing import Optional, Dict, List, Generator, IO
 from urllib.request import Request, urlopen
+
+import mistletoe
+
+from markdown import NotionBlockRenderer
 
 NOTION_API_URL = 'https://api.notion.com/v1/'
 NOTION_VERSION = '2021-05-13'
@@ -47,12 +52,20 @@ class NotionClient:
                                             'properties': properties,
                                             'children': children})
 
-    def create_markdown_page(self, parent: Dict,
+    def create_page_markdown(self, parent: Dict,
                              properties: Dict, md_body: IO):
-        pass
+        """
+        Identical to `create_page`, but the page's body is provided as
+        Markdown-formatted text.
+        :param md_body: a file-like object containing the page body in Markdown
+            (FYI: if you want to pass in a plain string,
+            use `StringIO("my-markdown-string")` to convert it
+            into a file-like object)
+        """
+        children = mistletoe.markdown(md_body, NotionBlockRenderer)
+        return self.create_page(parent, properties, children)
 
-    def append_markdown_block_children(self, block_id: str, md_body: IO):
-        pass
+
 
     def update_page_properties(self, page_id: str, properties: Dict) -> Dict:
         return self._request(f'pages/{page_id}',
@@ -68,6 +81,18 @@ class NotionClient:
         """https://developers.notion.com/reference/patch-block-children"""
         return self._request(f'blocks/{block_id}/children',
                              data={'children':children}, req_method='PATCH')
+
+    def append_block_markdown(self, block_id: str, md_body: IO):
+        """
+        Identical to `append_block_children`, but the child blocks are provided
+        in the form of Markdown-formatted text.
+        :param md_body: a file-like object containing Markdown-formatted text
+            (FYI: if you want to pass in a plain string,
+            use `StringIO("my-markdown-string")` to convert it
+            into a file-like object)
+        """
+        children = mistletoe.markdown(md_body, NotionBlockRenderer)
+        return self.append_block_children(block_id, children)
 
     def search(self, query: str,
                sort: Dict = {}, filter: Dict = {}) -> Generator[Dict, None, None]:

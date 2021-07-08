@@ -1,13 +1,30 @@
+from typing import Dict, List
+
 from mistletoe import BaseRenderer
 
 
-class NotionPyRenderer(BaseRenderer):
-    def render(self, token):
+class NotionBlockRenderer(BaseRenderer):
+
+    def render_paragraph(self, token) -> Dict:
+        block = {
+            "object": "block",
+            "type": "paragraph",
+            "paragraph": {
+                "text": self.render_inner(token)
+            }
+        }
+        return block
+
+    def render_raw_text(self, token) -> Dict:
         """
-        Takes a single Markdown token and renders it down to
-        NotionPy classes. Note that all the recursion is handled in the delegated
-        methods.
-        Overrides super().render but still uses render_map and then just
-        does special parsing for stuff
+        Default render method for RawText. Simply return token.content.
         """
-        return self.render_map[token.__class__.__name__](token)
+        obj = {"type": "text",
+               "text": {"content": token.content}}
+        return obj
+
+    def render_inner(self, token) -> List[Dict]:
+        """
+        Recursively renders child tokens.
+        """
+        return [self.render(child) for child in token.children]
