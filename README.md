@@ -22,7 +22,7 @@ If you haven't already, first [create a Notion integration](https://developers.n
 
 Using the `notion-api-python` library is pretty straightforward: provide authentication, make a `NotionClient` instance, and every method of that instance corresponds directly to a Notion API endpoint. That's the gist of it.
 
-⚠ To provide authentication, **set the `NOTION_TOKEN` environment variable** to your [internal integration token](https://www.notion.so/my-integrations), or [OAuth access token](https://www.notion.so/my-integrations). (Alternatively, you can also pass your token directly to the `NotionClient` constructor.)
+To provide authentication, **set the `NOTION_TOKEN` environment variable** to your [internal integration token](https://www.notion.so/my-integrations), or [OAuth access token](https://www.notion.so/my-integrations). (Alternatively, you can also pass your token directly to the `NotionClient` constructor.)
 
 Here's an example to get started:
 ```python
