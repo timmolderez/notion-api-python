@@ -1,4 +1,5 @@
 # Unofficial Notion SDK for Python
+<img align=right src="https://raw.githubusercontent.com/timmolderez/notion-api-python/main/icon.png" />
 
 This is an unofficial Python client for the public Notion API.
 
