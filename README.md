@@ -1,7 +1,7 @@
 # Unofficial Notion SDK for Python
 <img align=right src="https://raw.githubusercontent.com/timmolderez/notion-api-python/main/icon.png" />
 
-This is an unofficial Python client for the public Notion API.
+This is an unofficial Python client for the [public Notion API](https://developers.notion.com/).
 
 - Maps directly onto Notion's public REST API<br />(so you can keep using the [official reference documentation](https://developers.notion.com/reference))
 - Abstracts away the technicalities<br />(pagination, HTTP headers, request methods)
