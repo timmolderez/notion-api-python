@@ -4,7 +4,7 @@
 This is an unofficial Python client for the public Notion API.
 
 - Maps directly onto Notion's public REST API<br />(so you can keep using the [official reference documentation](https://developers.notion.com/reference))
-- Abstracts away the technicalities<br />(pagination, HTTP headers and request methods)
+- Abstracts away the technicalities<br />(pagination, HTTP headers, request methods)
 - Enables adding Markdown-formatted text to new or existing Notion pages
 
 ## Installation
@@ -22,7 +22,7 @@ If you haven't already, first [create a Notion integration](https://developers.n
 
 Using the `notion-api-python` library is pretty straightforward: provide authentication, make a `NotionClient` instance, and every method of that instance corresponds directly to a Notion API endpoint. That's the gist of it.
 
-To provide authentication, **set the `NOTION_TOKEN` environment variable** to your [internal integration token](https://www.notion.so/my-integrations), or [OAuth access token](https://www.notion.so/my-integrations).<br />Alternatively, you can also pass your token directly to the `NotionClient` constructor.
+To provide authentication, **set the `NOTION_TOKEN` environment variable** to your [internal integration token](https://www.notion.so/my-integrations), or [OAuth access token](https://www.notion.so/my-integrations). Alternatively, you can also pass your token directly to the `NotionClient` constructor.
 
 Here's an example to get started:
 ```python
@@ -50,9 +50,9 @@ Output:
 
 This example creates a client, and retrieves the properties of the database with ID `0ae112de34684accb62cff2748402c5c`. (The simplest way to get the ID of a database or a page is to [look at its URL](https://stackoverflow.com/questions/67728038/where-to-find-database-id-for-my-database-in-notion).)
 
-It's not a particularly interesting example, but the point is to demonstrate that the `get_database` method call we did corresponds directly to the REST API's [endpoint for retrieving databases](https://developers.notion.com/reference/get-database). It takes the same parameters; it produces the same JSON response. (except that the response is converted to a `Dict` for convenience)
+It's not a particularly interesting example, but the point is to demonstrate that the `get_database` method call corresponds directly to the REST API's [endpoint for retrieving databases](https://developers.notion.com/reference/get-database). It takes the same parameters; it produces the same JSON response. (except that the response is converted to a `Dict` for convenience)
 
-It's the same story for all the other endpoints in the Notion API, so everything you need to know can be found in the API's [reference documentation](https://developers.notion.com/reference).
+It's the same story for all the other endpoints in the Notion API, so everything you need can be found in the API's [reference documentation](https://developers.notion.com/reference). (Feel free to browse through the rest of this Readme to find a few more complex examples.)
 
 ### Lists of objects
 
