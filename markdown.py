@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from mistletoe import BaseRenderer
 
@@ -16,9 +16,9 @@ class NotionBlockRenderer(BaseRenderer):
     def render_heading(self, token) -> Dict:
         level = token.level
         if level > 3:
-            level = 3
             logging.warning("Heading levels > 3 are not supported by "
                             "Notion; falling back to level 3.")
+            level = 3
 
         return _create_block(f'heading_{level}',
                              {'text': self.render_inner(token)})
@@ -40,9 +40,13 @@ class NotionBlockRenderer(BaseRenderer):
         return _add_annotation(inner_objs, 'code')
 
     def render_image(self, token) -> Dict:
-        logging.warning('Image links are not yet supported by the Notion API;'
-                        'falling back to a plain link.')
-        return {'type': 'url', 'url': token.src}
+        logging.warning('Images are not yet supported by the Notion API;'
+                        'falling back to a plain-text link.')
+        inner_objs = self.render_inner(token)
+        link_object = {'type': 'url', 'url': token.src}
+        for inner_obj in inner_objs:
+            inner_obj['text']['link'] = link_object
+        return inner_objs
 
     def render_link(self, token) -> List[Dict]:
         inner_objs = self.render_inner(token)
@@ -52,9 +56,14 @@ class NotionBlockRenderer(BaseRenderer):
         return inner_objs
 
     def render_auto_link(self, token) -> Dict:
-        return {'type': 'url', 'url': token.src}
+        """
+        Example of an "auto link" in MarkDown:
+        "This is a link to the <https://wikipedia.org> page."
+        (Seems the URL does have to start with http:// / https://)
+        """
+        return _create_rich_text_object(token.target, token.target)
 
-    def render_list(self, token) -> Dict:
+    def render_list(self, token) -> List[Dict]:
         current_block_type = self.block_type
         self.block_type = ('numbered_list_item' if token.start
                            else 'bulleted_list_item')
@@ -74,7 +83,7 @@ class NotionBlockRenderer(BaseRenderer):
         return _create_block(self.block_type,
                              {'text': text_items, 'children': nested_items})
 
-    def render_quote(self, token) -> List[Dict]:
+    def render_quote(self, token) -> Dict:
         logging.warning('Quotes are not yet supported by the Notion API;'
                         'falling back to a paragraph block.')
         return self.render_paragraph(token)
@@ -89,8 +98,8 @@ class NotionBlockRenderer(BaseRenderer):
                         'API; ignorning.')
         return []
 
-    def render_line_break(self, token) -> Dict:
-        return self.render_paragraph(token)
+    def render_line_break(self, token) -> List[Dict]:
+        return _create_rich_text_object('\n')
 
     def render_table(self, token) -> List[Dict]:
         logging.warning('Tables are not yet supported by the Notion API; '
@@ -107,12 +116,7 @@ class NotionBlockRenderer(BaseRenderer):
         return self.render_inner(token)
 
     def render_raw_text(self, token) -> Dict:
-        """
-        Default render method for RawText. Simply return token.content.
-        """
-        obj = {"type": "text",
-               "text": {"content": token.content}}
-        return obj
+        return _create_rich_text_object(token.content)
 
     def render_escape_sequence(self, token):
         return self.render_inner(token)
@@ -122,7 +126,7 @@ class NotionBlockRenderer(BaseRenderer):
         for child in token.children:
             obj = self.render(child)
             if isinstance(obj, List):
-                # Flatten when there's recursive render_inner() calls..
+                # Flatten when there's recursive render_inner() calls
                 for subobj in obj:
                     rendered_list.append(subobj)
             else:
@@ -132,7 +136,7 @@ class NotionBlockRenderer(BaseRenderer):
 
 def _add_annotation(objs: List[Dict], annotation_key: str) -> List[Dict]:
     """
-    Adds an annotation to a list of rich text objects
+    Adds a boolean annotation (set to True) to a list of rich text objects
     (https://developers.notion.com/reference/rich-text)
     """
     for obj in objs:
@@ -144,8 +148,25 @@ def _add_annotation(objs: List[Dict], annotation_key: str) -> List[Dict]:
 
 
 def _create_block(block_type: str, body: Dict) -> Dict:
+    """
+    Creates a Dict that represents a Notion block
+    with the given type and body
+    (https://developers.notion.com/reference/block)
+    """
     return {
         "object": "block",
         "type": block_type,
         block_type: body
     }
+
+
+def _create_rich_text_object(content: str, url: Optional[str] = None) -> Dict:
+    """
+    Create a Notion rich text object with the given text contents,
+    and optionally a link to the given url
+    (https://developers.notion.com/reference/rich-text)
+    """
+    rto = {"type": "text", "text": {"content": content}}
+    if url:
+        rto['link'] = {'type': 'url', 'url': url}
+    return rto
