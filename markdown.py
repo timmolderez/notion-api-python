@@ -46,8 +46,9 @@ class NotionBlockRenderer(BaseRenderer):
 
     def render_link(self, token) -> List[Dict]:
         inner_objs = self.render_inner(token)
+        link_object = {'type': 'url', 'url': token.target}
         for inner_obj in inner_objs:
-            inner_obj['href'] = token.target
+            inner_obj['text']['link'] = link_object
         return inner_objs
 
     def render_auto_link(self, token) -> Dict:
