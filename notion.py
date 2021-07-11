@@ -67,9 +67,12 @@ class NotionClient:
 
 
 
-    def update_page_properties(self, page_id: str, properties: Dict) -> Dict:
+    def update_page(self, page_id: str, properties: Dict,
+                    archived: bool = False) -> Dict:
+        """https://developers.notion.com/reference/patch-page"""
         return self._request(f'pages/{page_id}',
-                             data={'properties': properties},
+                             data={'properties': properties,
+                                   'archived': archived},
                              req_method='PATCH')
 
     def get_block_children(self, block_id: str) -> Generator[Dict, None, None]:
@@ -92,7 +95,6 @@ class NotionClient:
             into a file-like object)
         """
         children = mistletoe.markdown(md_body, NotionBlockRenderer)
-        pprint(children)
         return self.append_block_children(block_id, children)
 
     def search(self, query: str,
