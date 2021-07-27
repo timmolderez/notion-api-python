@@ -14,9 +14,10 @@ def get_requirements():
                 reqs.append(lib.strip())
         return reqs
 
+
 setup(
     name="notion-api-python",
-    version="0.1",
+    version="0.1.1",
     url="https://github.com/timmolderez/notion-api-python",
     author="Tim Molderez",
     author_email="id@timmolderez.be",

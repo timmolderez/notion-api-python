@@ -1,12 +1,11 @@
 import json
 from os import getenv
-from pprint import pprint
 from typing import Optional, Dict, List, Generator, IO
 from urllib.request import Request, urlopen
 
 import mistletoe
 
-from markdown import NotionBlockRenderer
+from notion.markdown import NotionBlockRenderer
 
 NOTION_API_URL = 'https://api.notion.com/v1/'
 NOTION_VERSION = '2021-05-13'
