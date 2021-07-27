@@ -41,6 +41,11 @@ class NotionClient:
         return self._paginated_request(f'databases/{database_id}/query',
                                        data={'filter': filter, 'sorts': sorts})
 
+    def create_database(self, title: Dict, properties: Dict) -> Dict:
+        """https://developers.notion.com/reference/create-a-database"""
+        return self._request(f'databases',
+                             data={'title': title, 'properties': properties})
+
     def get_page(self, page_id: str) -> Dict:
         """https://developers.notion.com/reference/get-page"""
         return self._request('pages/' + page_id)
