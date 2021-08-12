@@ -41,7 +41,7 @@ class NotionClient:
                                        data={'filter': filter, 'sorts': sorts})
 
     def create_database(self, parent: Dict,
-                        title: Dict,
+                        title: List[Dict],
                         properties: Dict) -> Dict:
         """https://developers.notion.com/reference/create-a-database"""
         return self._request(f'databases',
