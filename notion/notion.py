@@ -45,7 +45,9 @@ class NotionClient:
                         properties: Dict) -> Dict:
         """https://developers.notion.com/reference/create-a-database"""
         return self._request(f'databases',
-                             data={'title': title, 'properties': properties})
+                             data={'parent': parent,
+                                   'title': title,
+                                   'properties': properties})
 
     def get_page(self, page_id: str) -> Dict:
         """https://developers.notion.com/reference/get-page"""
