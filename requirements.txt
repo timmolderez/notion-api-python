@@ -1,1 +1,1 @@
-mistletoe
+mistletoe==0.8.2
